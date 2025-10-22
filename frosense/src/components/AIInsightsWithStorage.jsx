@@ -64,7 +64,7 @@ const zones = [
     status: "Active",
     duty: "Charging",
     image:
-      "https://images.unsplash.com/photo-1569361457257-8f7f4f1f1b9b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3",
+      "https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3",
   },
 ];
 
@@ -195,127 +195,123 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
         </div>
       </motion.div>
 
-      {/* Zone Cards (no background grid) */}
-      {modelStarted ? (
-        animatedStorage.map((zone, idx) => (
-          <motion.div
-            key={zone.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1, duration: 0.5 }}
-            className="rounded-3xl p-6 shadow-lg border border-gray-100 bg-white hover:shadow-2xl transition-shadow duration-300"
-          >
-            {/* Zone Header */}
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-2xl font-semibold text-sky-700">{zone.name}</h2>
-              <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-medium">
-                {zone.status}
-              </span>
-            </div>
+      {/* 🌟 Single Unified White Grid */}
+      <div className="bg-white rounded-3xl shadow-lg p-6 space-y-6">
+        {modelStarted ? (
+          animatedStorage.map((zone, idx) => (
+            <motion.div
+              key={zone.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1, duration: 0.5 }}
+              className="rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col md:flex-row gap-6"
+            >
+              {/* Zone Image */}
+              <div className="w-full md:w-64 h-48 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
+                <img
+                  src={zone.image}
+                  alt={zone.product}
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-            {/* Zone Image */}
-            <div className="w-full h-56 md:h-64 rounded-2xl overflow-hidden shadow-inner mb-4">
-              <img
-                src={zone.image}
-                alt={zone.product}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-
-            {/* Zone Details */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-              {[
-                {
-                  label: "Temperature",
-                  value: `${zone.temperature.toFixed(1)}°C`,
-                  icon: <Thermometer className="w-4 h-4 text-sky-600" />,
-                  bg: "bg-gradient-to-br from-sky-50 to-sky-100",
-                },
-                {
-                  label: "Humidity",
-                  value: `${zone.humidity.toFixed(0)}%`,
-                  icon: <Droplets className="w-4 h-4 text-blue-500" />,
-                  bg: "bg-gradient-to-br from-blue-50 to-blue-100",
-                },
-                {
-                  label: "Items Stored",
-                  value: zone.items,
-                  icon: <Boxes className="w-4 h-4 text-emerald-600" />,
-                  bg: "bg-gradient-to-br from-emerald-50 to-emerald-100",
-                },
-                {
-                  label: "Shelf Life",
-                  value: `${Math.round(zone.shelfLifeDays)} days`,
-                  icon: <Leaf className="w-4 h-4 text-lime-600" />,
-                  bg: "bg-gradient-to-br from-lime-50 to-lime-100",
-                },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className={`flex flex-col items-center justify-center rounded-2xl p-4 shadow-sm ${stat.bg} border border-white/40 hover:shadow-md transition`}
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-700">
-                    {stat.icon}
-                    <p className="text-sm font-medium">{stat.label}</p>
+              {/* Zone Info + Stats */}
+              <div className="flex-1 flex flex-col justify-between gap-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-2xl font-semibold text-sky-700">{zone.name}</h2>
+                    <span className="text-sm text-green-700 font-medium">{zone.status}</span>
+                    <p className="text-gray-600 mt-1">{zone.product}</p>
                   </div>
-                  <p className="text-lg font-semibold text-gray-800">{stat.value}</p>
                 </div>
-              ))}
-            </div>
 
-            {/* AI Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {aiFeatures(zone).map((f) => (
-                <motion.div
-                  key={f.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className={`flex flex-col p-5 rounded-2xl border ${f.color} border-opacity-40 bg-gradient-to-r from-white/80 to-white/60 hover:scale-[1.03] transition-transform duration-300 shadow-md`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      {f.icon}
-                      <h3 className="text-sm font-semibold text-gray-800">
-                        {f.title}
-                      </h3>
-                    </div>
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                        f.risk === "High"
-                          ? "bg-red-100 text-red-700 border border-red-300"
-                          : f.risk === "Medium"
-                          ? "bg-amber-100 text-amber-700 border border-amber-300"
-                          : "bg-emerald-100 text-emerald-700 border border-emerald-300"
-                      }`}
-                    >
-                      {f.risk.toLowerCase()}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-gray-600 mb-2">{f.desc}</p>
-
-                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-auto">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    {
+                      label: "Temperature",
+                      value: `${zone.temperature.toFixed(1)}°C`,
+                      icon: <Thermometer className="w-5 h-5 text-red-500" />,
+                    },
+                    {
+                      label: "Humidity",
+                      value: `${zone.humidity.toFixed(0)}%`,
+                      icon: <Droplets className="w-5 h-5 text-blue-500" />,
+                    },
+                    {
+                      label: "Items Stored",
+                      value: zone.items,
+                      icon: <Boxes className="w-5 h-5 text-emerald-600" />,
+                    },
+                    {
+                      label: "Shelf Life",
+                      value: `${Math.round(zone.shelfLifeDays)} days`,
+                      icon: <Leaf className="w-5 h-5 text-lime-600" />,
+                    },
+                  ].map((stat) => (
                     <div
-                      className="h-2 rounded-full bg-sky-400"
-                      style={{ width: `${f.confidence}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1 font-medium text-right">
-                    {f.confidence}% confidence
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        ))
-      ) : (
-        <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-sky-200 bg-white/40">
-          <p className="text-sm text-gray-500">
-            Storage data will appear once the AI system starts
-          </p>
-        </div>
-      )}
+                      key={stat.label}
+                      className="flex flex-col items-center justify-center p-3 rounded-2xl bg-gray-50 border border-gray-100"
+                    >
+                      <div className="flex items-center gap-1 mb-1">{stat.icon}</div>
+                      <p className="text-sm font-medium text-gray-700">{stat.label}</p>
+                      <p className="text-lg font-semibold text-gray-800">{stat.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* AI Feature Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  {aiFeatures(zone).map((f) => (
+                    <motion.div
+                      key={f.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className={`flex flex-col p-4 rounded-2xl border ${f.color} border-opacity-30 bg-gray-50`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          {f.icon}
+                          <h3 className="text-sm font-semibold text-gray-800">
+                            {f.title}
+                          </h3>
+                        </div>
+                        <span
+                          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                            f.risk === "High"
+                              ? "bg-red-100 text-red-700 border border-red-300"
+                              : f.risk === "Medium"
+                              ? "bg-amber-100 text-amber-700 border border-amber-300"
+                              : "bg-emerald-100 text-emerald-700 border border-emerald-300"
+                          }`}
+                        >
+                          {f.risk.toLowerCase()}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">{f.desc}</p>
+                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-2 rounded-full bg-sky-400"
+                          style={{ width: `${f.confidence}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 font-medium text-right">
+                        {f.confidence}% confidence
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-gray-300">
+            <p className="text-sm text-gray-500">
+              Storage data will appear once the AI system starts
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
