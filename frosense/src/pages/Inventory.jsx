@@ -12,7 +12,7 @@ import {
   Package,
   Clock,
   Boxes,
-  Leaf
+  Leaf,
 } from "lucide-react";
 
 // ===== FanCard Component =====
@@ -71,8 +71,10 @@ function FanCard({ fan }) {
 
 // ===== Risk & Shelf-Life Utilities =====
 const getRiskLevel = (temp) => {
-  if (temp > 7) return { label: "High Risk", color: "text-rose-600 bg-rose-100" };
-  if (temp >= 5) return { label: "Medium Risk", color: "text-amber-600 bg-amber-100" };
+  if (temp > 7)
+    return { label: "High Risk", color: "text-rose-600 bg-rose-100" };
+  if (temp >= 5)
+    return { label: "Medium Risk", color: "text-amber-600 bg-amber-100" };
   return { label: "Low Risk", color: "text-green-600 bg-green-100" };
 };
 
@@ -282,13 +284,15 @@ export default function Inventory() {
               </div>
             ) : (
               <>
-                <video
-                  src="/videos/live-stream.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                {/* === LIVE ESP32-CAM STREAM === */}
+                <img
+                  src="http://172.20.10.5:81/stream"
+                  alt="ESP32-CAM Live Stream"
                   className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/fallback-image.png";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
                 <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
@@ -303,7 +307,7 @@ export default function Inventory() {
             )}
           </div>
         </div>
-        
+
         {/* ===== Fan Control Grid ===== */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-sky-700 mb-4 flex items-center gap-2">
@@ -316,8 +320,8 @@ export default function Inventory() {
           </div>
         </div>
 
-       {/* ===== Environment Data Section ===== */}
-       <div className="mt-10">
+        {/* ===== Environment Data Section ===== */}
+        <div className="mt-10">
           <h3 className="text-base font-semibold mb-6 text-sky-700 flex items-center gap-2">
             <Gauge size={20} className="text-sky-500" />
             Real-time monitoring and AI-powered insights for your cold storage system
@@ -393,7 +397,7 @@ export default function Inventory() {
           </div>
         </div>
 
-        {/* ===== Storage Compartments (Animated + Animated Labels) ===== */}
+        {/* ===== Storage Compartments ===== */}
         <div className="mt-12">
           <h2 className="text-xl font-semibold text-sky-700 mb-6 flex items-center gap-2">
             <Boxes className="text-sky-600 w-6 h-6" /> Storage Compartments
@@ -401,7 +405,9 @@ export default function Inventory() {
 
           {!modelStarted ? (
             <div className="flex flex-col items-center justify-center h-40 bg-white/50 rounded-2xl border border-sky-100/60 shadow-md text-slate-500">
-              <p className="text-sm">Storage data will appear once the system starts</p>
+              <p className="text-sm">
+                Storage data will appear once the system starts
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -409,30 +415,41 @@ export default function Inventory() {
                 const temp = zone.temperature;
                 const shelfDays = Math.round(zone.shelfLifeDays);
 
-                // Animated risk label color
                 const risk =
                   temp > 7
                     ? { label: "High Risk", color: "text-rose-600 bg-rose-100" }
                     : temp >= 5
-                    ? { label: "Medium Risk", color: "text-amber-600 bg-amber-100" }
-                    : { label: "Low Risk", color: "text-green-600 bg-green-100" };
+                    ? {
+                        label: "Medium Risk",
+                        color: "text-amber-600 bg-amber-100",
+                      }
+                    : {
+                        label: "Low Risk",
+                        color: "text-green-600 bg-green-100",
+                      };
 
-                // Animated shelf-life badge color
                 const shelf =
                   shelfDays <= 3
                     ? { color: "text-rose-600", label: `${shelfDays} days left` }
                     : shelfDays <= 7
-                    ? { color: "text-amber-600", label: `${shelfDays} days left` }
-                    : { color: "text-green-600", label: `${shelfDays} days left` };
+                    ? {
+                        color: "text-amber-600",
+                        label: `${shelfDays} days left`,
+                      }
+                    : {
+                        color: "text-green-600",
+                        label: `${shelfDays} days left`,
+                      };
 
                 return (
                   <div
                     key={index}
                     className="bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-lg hover:shadow-sky-200/50 transition-all text-gray-800"
                   >
-                    {/* Header */}
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-sky-600 font-semibold text-lg">{zone.name}</h3>
+                      <h3 className="text-sky-600 font-semibold text-lg">
+                        {zone.name}
+                      </h3>
                       <span
                         className={`px-3 py-1 text-xs rounded-full font-medium transition-colors duration-300 ${risk.color}`}
                       >
@@ -440,10 +457,13 @@ export default function Inventory() {
                       </span>
                     </div>
 
-                    <p className="text-sm font-medium text-gray-700">{zone.product}</p>
-                    <p className="text-gray-500 text-sm mb-4">{zone.items} item(s) stored</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {zone.product}
+                    </p>
+                    <p className="text-gray-500 text-sm mb-4">
+                      {zone.items} item(s) stored
+                    </p>
 
-                    {/* Environment Stats */}
                     <div className="flex justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <Thermometer className="w-4 h-4 text-rose-500" />
@@ -456,12 +476,13 @@ export default function Inventory() {
                         <Droplets className="w-4 h-4 text-sky-500" />
                         <div>
                           <p className="text-xs text-gray-500">Humidity</p>
-                          <p className="font-semibold">{zone.humidity.toFixed(0)}%</p>
+                          <p className="font-semibold">
+                            {zone.humidity.toFixed(0)}%
+                          </p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Shelf Life */}
                     <div className="flex items-center gap-2 mb-3">
                       <Clock className="w-4 h-4 text-amber-500" />
                       <span
@@ -471,7 +492,6 @@ export default function Inventory() {
                       </span>
                     </div>
 
-                    {/* Status Footer */}
                     <div className="flex justify-between items-center border-t border-gray-200 pt-3 text-sm">
                       <div className="flex items-center gap-2">
                         <Power className="w-4 h-4 text-green-600" />
@@ -489,8 +509,7 @@ export default function Inventory() {
           )}
         </div>
 
-
-       {/* ===== Environment Trends Section ===== */}
+        {/* ===== Environment Trends Section ===== */}
         <div className="mt-16 bg-white/70 backdrop-blur-xl border border-sky-100 rounded-3xl shadow-md hover:shadow-sky-200/50 transition-all">
           <div className="px-6 py-5 border-b border-sky-100 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-sky-700 flex items-center gap-2">
@@ -503,11 +522,9 @@ export default function Inventory() {
           </div>
 
           <div className="px-6 py-5">
-            {/* Pass modelStarted to animate chart */}
             <EnvironmentTrends modelStarted={modelStarted} />
           </div>
         </div>
-
       </main>
     </div>
   );
