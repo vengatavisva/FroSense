@@ -29,7 +29,6 @@ function FanCard({ fan }) {
     } else {
       setRpm(0);
     }
-
     return () => clearInterval(interval);
   }, [fan.on]);
 
@@ -71,10 +70,8 @@ function FanCard({ fan }) {
 
 // ===== Risk & Shelf-Life Utilities =====
 const getRiskLevel = (temp) => {
-  if (temp > 7)
-    return { label: "High Risk", color: "text-rose-600 bg-rose-100" };
-  if (temp >= 5)
-    return { label: "Medium Risk", color: "text-amber-600 bg-amber-100" };
+  if (temp > 7) return { label: "High Risk", color: "text-rose-600 bg-rose-100" };
+  if (temp >= 5) return { label: "Medium Risk", color: "text-amber-600 bg-amber-100" };
   return { label: "Low Risk", color: "text-green-600 bg-green-100" };
 };
 
@@ -94,7 +91,6 @@ export default function Inventory() {
     { id: 4, name: "FAN 4", on: false, rpm: 0 },
   ]);
 
-  // ===== Metrics state =====
   const [metrics, setMetrics] = useState({
     temperature: 0,
     humidity: 0,
@@ -102,58 +98,15 @@ export default function Inventory() {
     alerts: 0,
   });
 
-  // ===== Storage Zones =====
   const storageZones = [
-    {
-      name: "Zone A",
-      product: "Vaccine Batch A1",
-      items: 2,
-      temperature: 4.2,
-      humidity: 68,
-      shelfLifeDays: 12,
-      status: "Peltier ON",
-      duty: "70%",
-    },
-    {
-      name: "Zone B",
-      product: "Organic Samples",
-      items: 2,
-      temperature: 6.8,
-      humidity: 72,
-      shelfLifeDays: 5,
-      status: "Peltier ON",
-      duty: "85%",
-    },
-    {
-      name: "Zone C",
-      product: "Lab Serum C",
-      items: 1,
-      temperature: 8.5,
-      humidity: 78,
-      shelfLifeDays: 2,
-      status: "Peltier ON",
-      duty: "90%",
-    },
-    {
-      name: "Zone D",
-      product: "Enzyme D3",
-      items: 1,
-      temperature: 3.8,
-      humidity: 65,
-      shelfLifeDays: 15,
-      status: "Peltier ON",
-      duty: "75%",
-    },
+    { name: "Zone A", product: "Vaccine Batch A1", items: 2, temperature: 4.2, humidity: 68, shelfLifeDays: 12, status: "Peltier ON", duty: "70%" },
+    { name: "Zone B", product: "Organic Samples", items: 2, temperature: 6.8, humidity: 72, shelfLifeDays: 5, status: "Peltier ON", duty: "85%" },
+    { name: "Zone C", product: "Lab Serum C", items: 1, temperature: 8.5, humidity: 78, shelfLifeDays: 2, status: "Peltier ON", duty: "90%" },
+    { name: "Zone D", product: "Enzyme D3", items: 1, temperature: 3.8, humidity: 65, shelfLifeDays: 15, status: "Peltier ON", duty: "75%" },
   ];
 
-  // ===== Animated Storage State =====
   const [animatedStorage, setAnimatedStorage] = useState(
-    storageZones.map((zone) => ({
-      ...zone,
-      temperature: 0,
-      humidity: 0,
-      shelfLifeDays: 0,
-    }))
+    storageZones.map((zone) => ({ ...zone, temperature: 0, humidity: 0, shelfLifeDays: 0 }))
   );
 
   // ===== Toggle Model =====
@@ -172,13 +125,7 @@ export default function Inventory() {
   // ===== Animate Metrics =====
   useEffect(() => {
     let interval;
-    const target = {
-      temperature: 5.8,
-      humidity: 71,
-      battery: 68,
-      alerts: 3,
-    };
-
+    const target = { temperature: 5.8, humidity: 71, battery: 68, alerts: 3 };
     if (modelStarted) {
       interval = setInterval(() => {
         setMetrics((prev) => {
@@ -193,54 +140,33 @@ export default function Inventory() {
     } else {
       setMetrics({ temperature: 0, humidity: 0, battery: 0, alerts: 0 });
     }
-
     return () => clearInterval(interval);
   }, [modelStarted]);
 
   // ===== Animate Storage =====
   useEffect(() => {
     let interval;
-
     if (modelStarted) {
       interval = setInterval(() => {
         setAnimatedStorage((prev) =>
           prev.map((zone, idx) => {
             const target = storageZones[idx];
-            const nextTemp =
-              Math.abs(target.temperature - zone.temperature) < 0.1
-                ? target.temperature
-                : zone.temperature + (target.temperature - zone.temperature) * 0.1;
-
-            const nextHumidity =
-              Math.abs(target.humidity - zone.humidity) < 0.1
-                ? target.humidity
-                : zone.humidity + (target.humidity - zone.humidity) * 0.1;
-
-            const nextShelf =
-              Math.abs(target.shelfLifeDays - zone.shelfLifeDays) < 0.1
-                ? target.shelfLifeDays
-                : zone.shelfLifeDays + (target.shelfLifeDays - zone.shelfLifeDays) * 0.1;
-
-            return {
-              ...zone,
-              temperature: nextTemp,
-              humidity: nextHumidity,
-              shelfLifeDays: nextShelf,
-            };
+            const nextTemp = Math.abs(target.temperature - zone.temperature) < 0.1
+              ? target.temperature
+              : zone.temperature + (target.temperature - zone.temperature) * 0.1;
+            const nextHumidity = Math.abs(target.humidity - zone.humidity) < 0.1
+              ? target.humidity
+              : zone.humidity + (target.humidity - zone.humidity) * 0.1;
+            const nextShelf = Math.abs(target.shelfLifeDays - zone.shelfLifeDays) < 0.1
+              ? target.shelfLifeDays
+              : zone.shelfLifeDays + (target.shelfLifeDays - zone.shelfLifeDays) * 0.1;
+            return { ...zone, temperature: nextTemp, humidity: nextHumidity, shelfLifeDays: nextShelf };
           })
         );
       }, 50);
     } else {
-      setAnimatedStorage(
-        storageZones.map((zone) => ({
-          ...zone,
-          temperature: 0,
-          humidity: 0,
-          shelfLifeDays: 0,
-        }))
-      );
+      setAnimatedStorage(storageZones.map((zone) => ({ ...zone, temperature: 0, humidity: 0, shelfLifeDays: 0 })));
     }
-
     return () => clearInterval(interval);
   }, [modelStarted]);
 
@@ -284,15 +210,12 @@ export default function Inventory() {
               </div>
             ) : (
               <>
-                {/* === LIVE ESP32-CAM STREAM == */}
+                {/* === LIVE ESP32-CAM STREAM === */}
                 <img
                   src="http://172.20.10.5/stream"
                   alt="ESP32-CAM Live Stream"
                   className="absolute inset-0 w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/fallback-image.png";
-                  }}
+                  onError={(e) => { e.target.onerror = null; e.target.src = "/fallback-image.png"; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
                 <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
@@ -414,32 +337,8 @@ export default function Inventory() {
               {animatedStorage.map((zone, index) => {
                 const temp = zone.temperature;
                 const shelfDays = Math.round(zone.shelfLifeDays);
-
-                const risk =
-                  temp > 7
-                    ? { label: "High Risk", color: "text-rose-600 bg-rose-100" }
-                    : temp >= 5
-                    ? {
-                        label: "Medium Risk",
-                        color: "text-amber-600 bg-amber-100",
-                      }
-                    : {
-                        label: "Low Risk",
-                        color: "text-green-600 bg-green-100",
-                      };
-
-                const shelf =
-                  shelfDays <= 3
-                    ? { color: "text-rose-600", label: `${shelfDays} days left` }
-                    : shelfDays <= 7
-                    ? {
-                        color: "text-amber-600",
-                        label: `${shelfDays} days left`,
-                      }
-                    : {
-                        color: "text-green-600",
-                        label: `${shelfDays} days left`,
-                      };
+                const risk = getRiskLevel(temp);
+                const shelf = getShelfLifeStatus(shelfDays);
 
                 return (
                   <div
@@ -447,22 +346,13 @@ export default function Inventory() {
                     className="bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-lg hover:shadow-sky-200/50 transition-all text-gray-800"
                   >
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-sky-600 font-semibold text-lg">
-                        {zone.name}
-                      </h3>
-                      <span
-                        className={`px-3 py-1 text-xs rounded-full font-medium transition-colors duration-300 ${risk.color}`}
-                      >
+                      <h3 className="text-sky-600 font-semibold text-lg">{zone.name}</h3>
+                      <span className={`px-3 py-1 text-xs rounded-full font-medium transition-colors duration-300 ${risk.color}`}>
                         {risk.label}
                       </span>
                     </div>
-
-                    <p className="text-sm font-medium text-gray-700">
-                      {zone.product}
-                    </p>
-                    <p className="text-gray-500 text-sm mb-4">
-                      {zone.items} item(s) stored
-                    </p>
+                    <p className="text-sm font-medium text-gray-700">{zone.product}</p>
+                    <p className="text-gray-500 text-sm mb-4">{zone.items} item(s) stored</p>
 
                     <div className="flex justify-between mb-4">
                       <div className="flex items-center gap-2">
@@ -476,18 +366,14 @@ export default function Inventory() {
                         <Droplets className="w-4 h-4 text-sky-500" />
                         <div>
                           <p className="text-xs text-gray-500">Humidity</p>
-                          <p className="font-semibold">
-                            {zone.humidity.toFixed(0)}%
-                          </p>
+                          <p className="font-semibold">{zone.humidity.toFixed(0)}%</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2 mb-3">
                       <Clock className="w-4 h-4 text-amber-500" />
-                      <span
-                        className={`text-sm font-medium transition-colors duration-300 ${shelf.color}`}
-                      >
+                      <span className={`text-sm font-medium transition-colors duration-300 ${shelf.color}`}>
                         Shelf life: {shelf.label}
                       </span>
                     </div>
@@ -516,11 +402,8 @@ export default function Inventory() {
               <Leaf className="text-sky-500 w-6 h-6" />
               Environment Trends
             </h2>
-            <p className="text-sm text-gray-500">
-              Historical temperature and humidity data
-            </p>
+            <p className="text-sm text-gray-500">Historical temperature and humidity data</p>
           </div>
-
           <div className="px-6 py-5">
             <EnvironmentTrends modelStarted={modelStarted} />
           </div>
