@@ -284,7 +284,7 @@ export default function Inventory() {
               </div>
             ) : (
               <>
-                {/* === LIVE ESP32-CAM STREAM === */}
+                {/* === LIVE ESP32-CAM STREAM == */}
                 <img
                   src="http://172.20.10.5:81/stream"
                   alt="ESP32-CAM Live Stream"
