@@ -11,7 +11,6 @@ import {
   LineChart,
 } from "lucide-react";
 
-// --- Mock Zones Data ---
 const zones = [
   {
     id: "A",
@@ -67,7 +66,6 @@ const zones = [
   },
 ];
 
-// --- Temperature Recommendation Logic ---
 function recommendTemperature(product, currentTemp) {
   const map = {
     strawberries: 2.0,
@@ -100,7 +98,6 @@ function recommendTemperature(product, currentTemp) {
   return { recommended, confidence, action, riskLevel };
 }
 
-// --- AI Features for Each Zone ---
 const aiFeatures = (zone) => {
   const rec = recommendTemperature(zone.product, zone.temperature);
   return [
@@ -148,142 +145,142 @@ const aiFeatures = (zone) => {
   ];
 };
 
-// --- Component ---
 export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
   const animatedStorage = useMemo(() => zones, []);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-8 pt-0 pb-10 space-y-10">
-      {/* --- Compact Header --- */}
+      {/* --- Unified Card: Header + Body --- */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-teal-500 to-emerald-500 p-[1px] shadow-lg mt-2"
+        className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden"
       >
-        <div className="rounded-3xl bg-white/95 backdrop-blur-md px-6 py-6 flex flex-col md:flex-row items-center justify-between">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 border-b border-gray-100">
+          {/* Left Side: Title & Description */}
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-emerald-400 blur-md opacity-70 animate-pulse"></div>
-              <div className="relative bg-white rounded-full p-3 shadow-sm">
-                <Brain className="w-7 h-7 text-sky-600" />
-              </div>
+            <div className="bg-sky-100 rounded-full p-3 flex items-center justify-center shadow-sm">
+              <Brain className="w-7 h-7 text-sky-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-700 to-emerald-700 bg-clip-text text-transparent">
-                AI Sustainability Dashboard
+              <h1 className="text-2xl font-bold text-gray-800">
+                Sustainable AI Optimisation
               </h1>
               <p className="text-gray-500 text-sm mt-1">
-                Smart insights to minimize spoilage & optimize solar cooling.
+                Real-time AI insights to enhance energy efficiency and reduce food waste.
               </p>
             </div>
           </div>
 
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex items-center gap-2 mt-4 md:mt-0"
-          >
-            <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-sky-100 to-emerald-100 rounded-full border border-sky-200">
+          {/* Right Side: AI Model Status */}
+          <div className="flex items-center gap-2 mt-3 md:mt-0">
+            <div className="flex items-center gap-2 px-4 py-1.5 bg-gray-100 rounded-full border border-gray-300">
               <LineChart className="w-4 h-4 text-emerald-600" />
               <span className="text-xs font-medium text-gray-700">
-                Real-time Monitoring Active
+                AI Model Active
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
 
-      {/* --- Main Grid Section --- */}
-      <div className="bg-white rounded-3xl shadow-lg p-8 space-y-8 border border-gray-100">
-        {modelStarted ? (
-          animatedStorage.map((zone, idx) => (
-            <motion.div
-              key={zone.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col md:flex-row gap-8 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white via-sky-50/40 to-emerald-50/40"
-            >
-              {/* Zone Image */}
-              <div className="w-full md:w-72 h-52 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
-                <img
-                  src={zone.image}
-                  alt={zone.product}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        {/* Main Content Section */}
+        <div className="p-8 space-y-8">
+          {modelStarted ? (
+            animatedStorage.map((zone, idx) => (
+              <motion.div
+                key={zone.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                className="rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col gap-8 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white via-sky-50/40 to-emerald-50/40"
+              >
+                {/* --- Top: Image + Info --- */}
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="w-full md:w-80 h-56 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
+                    <img
+                      src={zone.image}
+                      alt={zone.product}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-              {/* Zone Info */}
-              <div className="flex-1 flex flex-col justify-between gap-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-xl font-semibold text-sky-700">
-                      {zone.name}
-                    </h2>
-                    <span className="text-sm text-green-700 font-medium">
-                      {zone.status}
-                    </span>
-                    <p className="text-gray-600 mt-1">{zone.product}</p>
+                  <div className="flex-1 flex flex-col justify-between gap-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-sky-700">
+                          {zone.name}
+                        </h2>
+                        <span className="text-sm text-green-700 font-medium">
+                          {zone.status}
+                        </span>
+                        <p className="text-gray-600 mt-1 text-base">
+                          {zone.product}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5">
+                      {[
+                        {
+                          label: "Temperature",
+                          value: `${zone.temperature.toFixed(1)}°C`,
+                          icon: <Thermometer className="w-5 h-5 text-red-500" />,
+                        },
+                        {
+                          label: "Humidity",
+                          value: `${zone.humidity.toFixed(0)}%`,
+                          icon: <Droplets className="w-5 h-5 text-blue-500" />,
+                        },
+                        {
+                          label: "Items Stored",
+                          value: zone.items,
+                          icon: <Boxes className="w-5 h-5 text-emerald-600" />,
+                        },
+                        {
+                          label: "Shelf Life",
+                          value: `${Math.round(zone.shelfLifeDays)} days`,
+                          icon: <Leaf className="w-5 h-5 text-lime-600" />,
+                        },
+                        {
+                          label: "Duty",
+                          value: zone.duty,
+                          icon: <Bolt className="w-5 h-5 text-amber-600" />,
+                        },
+                      ].map((stat) => (
+                        <div
+                          key={stat.label}
+                          className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-sm transition-all"
+                        >
+                          <div className="flex items-center gap-1 mb-1">{stat.icon}</div>
+                          <p className="text-sm font-medium text-gray-700">
+                            {stat.label}
+                          </p>
+                          <p className="text-lg font-semibold text-gray-800">
+                            {stat.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    {
-                      label: "Temperature",
-                      value: `${zone.temperature.toFixed(1)}°C`,
-                      icon: <Thermometer className="w-5 h-5 text-red-500" />,
-                    },
-                    {
-                      label: "Humidity",
-                      value: `${zone.humidity.toFixed(0)}%`,
-                      icon: <Droplets className="w-5 h-5 text-blue-500" />,
-                    },
-                    {
-                      label: "Items Stored",
-                      value: zone.items,
-                      icon: <Boxes className="w-5 h-5 text-emerald-600" />,
-                    },
-                    {
-                      label: "Shelf Life",
-                      value: `${Math.round(zone.shelfLifeDays)} days`,
-                      icon: <Leaf className="w-5 h-5 text-lime-600" />,
-                    },
-                  ].map((stat) => (
-                    <div
-                      key={stat.label}
-                      className="flex flex-col items-center justify-center p-3 rounded-2xl bg-gray-50 border border-gray-100"
-                    >
-                      <div className="flex items-center gap-1 mb-1">
-                        {stat.icon}
-                      </div>
-                      <p className="text-sm font-medium text-gray-700">
-                        {stat.label}
-                      </p>
-                      <p className="text-lg font-semibold text-gray-800">
-                        {stat.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* AI Feature Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
-                  {aiFeatures(zone).map((f) => (
+                {/* --- AI Feature Cards --- */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mt-4">
+                  {aiFeatures(zone).map((f, i) => (
                     <motion.div
                       key={f.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className={`flex flex-col p-5 rounded-2xl border ${f.color} border-opacity-40 bg-white/70 backdrop-blur-sm`}
+                      transition={{ duration: 0.4, delay: i * 0.1 }}
+                      className={`flex flex-col p-6 rounded-2xl border ${f.color} border-opacity-40 bg-white/80 backdrop-blur-sm hover:shadow-md transition-all`}
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           {f.icon}
-                          <h3 className="text-sm font-semibold text-gray-800">
+                          <h3 className="text-base font-semibold text-gray-800">
                             {f.title}
                           </h3>
                         </div>
@@ -299,30 +296,36 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
                           {f.risk.toLowerCase()}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-600 mb-2">{f.desc}</p>
+
+                      <p className="text-sm text-gray-600 mb-2 leading-relaxed">
+                        {f.desc}
+                      </p>
+
                       <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                           className="h-2 rounded-full bg-sky-400 transition-all duration-700"
                           style={{ width: `${f.confidence}%` }}
                         />
                       </div>
+
                       <p className="text-xs text-gray-500 mt-1 font-medium text-right">
                         {f.confidence}% confidence
                       </p>
                     </motion.div>
                   ))}
                 </div>
-              </div>
-            </motion.div>
-          ))
-        ) : (
-          <div className="flex items-center justify-center h-52 rounded-2xl border border-dashed border-gray-300">
-            <p className="text-sm text-gray-500">
-              Storage data will appear once the AI model is started.
-            </p>
-          </div>
-        )}
-      </div>
+              </motion.div>
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-52 rounded-2xl border border-dashed border-gray-300">
+              <p className="text-sm text-gray-500">
+                Storage data will appear once the AI model is started.
+              </p>
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 }
+
