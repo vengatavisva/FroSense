@@ -55,7 +55,7 @@ export default function Home() {
       {/* --- WHY SUSTAINABILITY MATTERS SECTION --- */}
       <section className="pt-10 pb-20 bg-blue-50 text-center">
         <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
-        Why ECOFROST?
+        Why FROSENSE?
         </h2>
         <p className="max-w-2xl mx-auto text-gray-600 mb-12">
         Traditional cold storage is expensive, energy-hungry, and inaccessible to small farmers. ECOFROST brings intelligence, efficiency, and sustainability to every farm — powered by AI, IoT, and solar innovation.
