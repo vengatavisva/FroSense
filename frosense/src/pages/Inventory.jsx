@@ -26,7 +26,7 @@ function FanCard({ fan }) {
 
       <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-white to-white flex items-center justify-center">
         {fan.on ? (
-          <video src="IMG_9634.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <video src="IMG_9634.MP4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
         ) : (
           <img src="7_-min.png" alt="Fan Stopped" className="absolute inset-0 w-full h-full object-cover" />
         )}

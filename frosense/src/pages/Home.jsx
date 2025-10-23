@@ -124,7 +124,7 @@ export default function Home() {
           {/* SDG 2 */}
           <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition text-center">
             <img
-              src="https://img.icons8.com/emoji/96/ear-of-rice.png"
+              src="sdg2.png"
               alt="Zero Hunger"
               className="mx-auto mb-4 w-12 h-12"
             />
@@ -138,7 +138,7 @@ export default function Home() {
           {/* SDG 7 */}
           <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition text-center">
             <img
-              src="https://img.icons8.com/emoji/96/sun-emoji.png"
+              src="sdg7.png"
               alt="Clean Energy"
               className="mx-auto mb-4 w-12 h-12"
             />
@@ -152,7 +152,7 @@ export default function Home() {
           {/* SDG 9 */}
           <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition text-center">
             <img
-              src="https://img.icons8.com/emoji/96/building-construction.png"
+              src="sdg9.png"
               alt="Innovation"
               className="mx-auto mb-4 w-12 h-12"
             />
@@ -166,7 +166,7 @@ export default function Home() {
           {/* SDG 12 */}
           <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition text-center">
             <img
-              src="https://img.icons8.com/emoji/96/recycling-symbol.png"
+              src="sdg12.png"
               alt="Responsible Production"
               className="mx-auto mb-4 w-12 h-12"
             />
@@ -180,7 +180,7 @@ export default function Home() {
           {/* SDG 13 */}
           <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition text-center">
             <img
-              src="https://img.icons8.com/emoji/96/globe-showing-europe-africa.png"
+              src="sdg13.jpg"
               alt="Climate Action"
               className="mx-auto mb-4 w-12 h-12"
             />
@@ -214,7 +214,7 @@ export default function Home() {
               <Battery className="w-10 h-10 text-blue-400" />
             </div>
             <p className="text-5xl font-extrabold text-teal-500">
-              <Counter end={60} suffix="%+" />
+              <Counter end={75} suffix="%+" />
             </p>
             <p className="text-gray-600 mt-2 text-lg">Energy Efficiency</p>
           </div>
@@ -225,7 +225,7 @@ export default function Home() {
               <Users className="w-10 h-10 text-green-500" />
             </div>
             <p className="text-5xl font-extrabold text-teal-500">
-              <Counter end={500} suffix="+" />
+              <Counter end={20} suffix="+" />
             </p>
             <p className="text-gray-600 mt-2 text-lg">Farmers Benefited</p>
           </div>
@@ -236,7 +236,7 @@ export default function Home() {
               <Sun className="w-10 h-10 text-yellow-500" />
             </div>
             <p className="text-5xl font-extrabold text-teal-500">
-              <Counter end={100} suffix="%" />
+              <Counter end={97} suffix="%" />
             </p>
             <p className="text-gray-600 mt-2 text-lg">Solar Utilization</p>
           </div>
