@@ -92,7 +92,7 @@ export default function Inventory() {
             ) : (
               <>
                 <img
-                  src="http://10.203.235.141:81/stream"
+                  src="http://10.184.54.141:81/stream"
                   alt="ESP32-CAM Live Stream"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {

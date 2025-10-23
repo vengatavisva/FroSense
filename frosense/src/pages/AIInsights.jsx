@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Wind, Leaf, AlertTriangle, Battery, Thermometer } from "lucide-react";
+import {
+  Wind,
+  Leaf,
+  AlertTriangle,
+  Battery,
+  Thermometer,
+  Brain,
+  LineChart,
+} from "lucide-react";
+import { motion } from "framer-motion";
 import EnergyFlowDiagram from "../components/EnergyFlowDiagram";
 import AIInsightStorage from "../components/AIInsightsWithStorage";
 
@@ -34,7 +43,6 @@ export default function AIInsights() {
     });
   }, []);
 
-  // --- Active Alerts Dummy Data ---
   const alerts = [
     {
       id: 1,
@@ -46,8 +54,7 @@ export default function AIInsights() {
     {
       id: 2,
       type: "Warning",
-      message:
-        "Strawberries expiring soon. Move to high-priority section.",
+      message: "Strawberries expiring soon. Move to high-priority section.",
       icon: <AlertTriangle className="text-yellow-500 w-7 h-7" />,
       color: "from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-700",
     },
@@ -62,11 +69,89 @@ export default function AIInsights() {
 
   return (
     <div className="bg-blue-50 min-h-screen py-14 px-6 flex flex-col items-center mt-6">
-      {/* --- AI Storage Section --- */}
-      <div className="w-full max-w-7xl mb-14">
-        <AIInsightStorage />
+      {/* --- Gradient AI Header --- */}
+      <div className="w-full max-w-7xl mx-auto px-8 pt-0 pb-10 space-y-10">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-teal-500 to-emerald-500 p-[1px] shadow-lg mt-2"
+        >
+          <div className="rounded-3xl bg-white/95 backdrop-blur-md px-6 py-6 flex flex-col md:flex-row items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-emerald-400 blur-md opacity-70 animate-pulse"></div>
+                <div className="relative bg-white rounded-full p-3 shadow-sm">
+                  <Brain className="w-7 h-7 text-sky-600" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-700 to-emerald-700 bg-clip-text text-transparent">
+                  AI Insights Dashboard
+                </h1>
+                <p className="text-gray-500 text-sm mt-1">
+                  Real-time environment monitoring powered by AI analytics.
+                </p>
+              </div>
+            </div>
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center gap-2 mt-4 md:mt-0"
+            >
+              <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-sky-100 to-emerald-100 rounded-full border border-sky-200">
+                <LineChart className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs font-medium text-gray-700">
+                  Real-time Monitoring Active
+                </span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
 
+      {/* --- Active Alerts Section --- */}
+      <div className="w-full max-w-7xl mt-8 mb-14">
+        <div className="rounded-3xl bg-white border border-sky-100 shadow-lg p-10 relative overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-40 pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
+              backgroundSize: "24px 24px",
+            }}
+          ></div>
+
+          <div className="relative flex flex-col items-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold text-sky-800 mb-3 flex items-center gap-3">
+              <AlertTriangle className="w-7 h-7 text-sky-600 animate-pulse" />
+              Active Alerts
+            </h2>
+            <p className="text-gray-600 text-center text-base sm:text-lg max-w-2xl">
+              Live anomaly detection and real-time cold storage safety alerts
+              powered by AI analytics.
+            </p>
+          </div>
+
+          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {alerts.map((alert) => (
+              <div
+                key={alert.id}
+                className={`bg-gradient-to-br ${alert.color} rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 p-6 flex flex-col justify-between`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  {alert.icon}
+                  <h3 className="font-semibold text-lg">{alert.type} Alert</h3>
+                </div>
+                <p className="text-sm leading-relaxed">{alert.message}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
       {/* --- Cold Storage Gas Monitoring Section --- */}
       <div className="relative w-full max-w-7xl rounded-3xl bg-white border border-sky-100 shadow-lg p-10 overflow-hidden">
         <div
@@ -170,49 +255,14 @@ export default function AIInsights() {
         </div>
       </div>
 
-      {/* --- Energy Flow Diagram --- */}
+      {/* --- AI Storage Section --- */}
       <div className="w-full max-w-7xl mt-14">
-        <EnergyFlowDiagram />
+        <AIInsightStorage />
       </div>
 
-      {/* --- Active Alerts Section --- */}
-      <div className="w-full max-w-7xl mt-14 mb-14">
-        <div className="rounded-3xl bg-white border border-sky-100 shadow-lg p-10 relative overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-          ></div>
-
-          <div className="relative flex flex-col items-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold text-sky-800 mb-3 flex items-center gap-3">
-              <AlertTriangle className="w-7 h-7 text-sky-600 animate-pulse" />
-              Active Alerts
-            </h2>
-            <p className="text-gray-600 text-center text-base sm:text-lg max-w-2xl">
-              Live anomaly detection and real-time cold storage safety alerts
-              powered by AI analytics.
-            </p>
-          </div>
-
-          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {alerts.map((alert) => (
-              <div
-                key={alert.id}
-                className={`bg-gradient-to-br ${alert.color} rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 p-6 flex flex-col justify-between`}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  {alert.icon}
-                  <h3 className="font-semibold text-lg">{alert.type} Alert</h3>
-                </div>
-                <p className="text-sm leading-relaxed">{alert.message}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* --- Energy Flow Diagram --- */}
+      <div className="w-full max-w-7xl mt-2">
+        <EnergyFlowDiagram />
       </div>
     </div>
   );
