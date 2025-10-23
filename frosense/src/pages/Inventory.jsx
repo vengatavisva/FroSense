@@ -194,42 +194,48 @@ export default function Inventory() {
           </div>
 
           <div className="relative w-full h-[22rem] sm:h-[26rem] lg:h-[28rem] overflow-hidden rounded-b-3xl">
-            {!modelStarted ? (
-              <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-sky-50 via-white to-sky-100 border-t border-sky-100/50">
-                <div className="w-20 h-20 mb-3 rounded-full border-4 border-sky-300 flex items-center justify-center animate-pulse shadow-inner">
-                  <Video className="text-sky-400 w-10 h-10" />
-                </div>
-                <p className="text-slate-500 mb-3 text-sm tracking-wide">
-                  System not active
-                </p>
-                <button
-                  onClick={toggleAll}
-                  className="px-6 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-full font-semibold shadow-md"
-                >
-                  ▶️ Start Model
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* === LIVE ESP32-CAM STREAM === */}
-                <img
-                  src="http://172.20.10.5/stream"
-                  alt="ESP32-CAM Live Stream"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onError={(e) => { e.target.onerror = null; e.target.src = "/fallback-image.png"; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
-                <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
-                <div className="absolute bottom-4 right-4 text-sm bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-sky-700 font-medium flex items-center gap-2">
-                  <span className="animate-pulse text-red-500 text-base">●</span>
-                  Live Feed Active
-                </div>
-                <div className="absolute bottom-4 left-4 text-xs text-white/80 bg-sky-900/40 px-2 py-1 rounded-md font-mono backdrop-blur-sm">
-                  {new Date().toLocaleTimeString()}
-                </div>
-              </>
-            )}
-          </div>
+  {!modelStarted ? (
+    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-sky-50 via-white to-sky-100 border-t border-sky-100/50">
+      <div className="w-20 h-20 mb-3 rounded-full border-4 border-sky-300 flex items-center justify-center animate-pulse shadow-inner">
+        <Video className="text-sky-400 w-10 h-10" />
+      </div>
+      <p className="text-slate-500 mb-3 text-sm tracking-wide">
+        System not active
+      </p>
+      <button
+        onClick={toggleAll}
+        className="px-6 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-full font-semibold shadow-md"
+      >
+        ▶️ Start Model
+      </button>
+    </div>
+  ) : (
+    <>
+      {/* ESP32-CAM Live Stream */}
+      <img
+        src="http://10.203.235.141:81/stream"
+        alt="ESP32-CAM Live Stream"
+        className="absolute inset-0 w-full h-full object-cover"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/fallback-image.png";
+        }}
+      />
+
+      {/* Overlay Gradients & Indicators */}
+      <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
+      <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
+      <div className="absolute bottom-4 right-4 text-sm bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-sky-700 font-medium flex items-center gap-2">
+        <span className="animate-pulse text-red-500 text-base">●</span>
+        Live Feed Active
+      </div>
+      <div className="absolute bottom-4 left-4 text-xs text-white/80 bg-sky-900/40 px-2 py-1 rounded-md font-mono backdrop-blur-sm">
+        {new Date().toLocaleTimeString()}
+      </div>
+    </>
+  )}
+</div>
+
         </div>
 
         {/* ===== Fan Control Grid ===== */}
