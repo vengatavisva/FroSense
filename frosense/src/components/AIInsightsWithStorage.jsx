@@ -1,4 +1,3 @@
-// AIInsightsWithStorageVertical.jsx
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
@@ -12,7 +11,7 @@ import {
   LineChart,
 } from "lucide-react";
 
-// Mock zones
+// --- Mock Zones Data ---
 const zones = [
   {
     id: "A",
@@ -68,7 +67,7 @@ const zones = [
   },
 ];
 
-// Temperature recommendation logic
+// --- Temperature Recommendation Logic ---
 function recommendTemperature(product, currentTemp) {
   const map = {
     strawberries: 2.0,
@@ -101,7 +100,7 @@ function recommendTemperature(product, currentTemp) {
   return { recommended, confidence, action, riskLevel };
 }
 
-// AI Features per zone
+// --- AI Features for Each Zone ---
 const aiFeatures = (zone) => {
   const rec = recommendTemperature(zone.product, zone.temperature);
   return [
@@ -131,7 +130,7 @@ const aiFeatures = (zone) => {
       title: "Energy Optimization",
       icon: <Bolt className="w-5 h-5 text-amber-600" />,
       desc:
-        "Schedule intensive cooling during peak solar hours to maximize renewable energy usage.",
+        "Schedule cooling during peak solar hours to maximize renewable energy usage.",
       confidence: 85,
       risk: "Medium",
       color: "bg-amber-50 text-amber-600",
@@ -141,7 +140,7 @@ const aiFeatures = (zone) => {
       title: "Energy Savings Recommendation",
       icon: <Leaf className="w-5 h-5 text-green-600" />,
       desc:
-        "Optimize storage patterns to save energy while maintaining product quality.",
+        "Optimize zone patterns to save energy while maintaining product quality.",
       confidence: 80,
       risk: "Medium",
       color: "bg-green-50 text-green-600",
@@ -149,19 +148,20 @@ const aiFeatures = (zone) => {
   ];
 };
 
+// --- Component ---
 export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
   const animatedStorage = useMemo(() => zones, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-12">
-      {/* Enhanced Header */}
+    <div className="w-full max-w-7xl mx-auto px-8 pt-0 pb-10 space-y-10">
+      {/* --- Compact Header --- */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-teal-500 to-emerald-500 p-[1px] shadow-lg"
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-teal-500 to-emerald-500 p-[1px] shadow-lg mt-2"
       >
-        <div className="rounded-3xl bg-white/90 backdrop-blur-md px-6 py-8 flex flex-col md:flex-row items-center justify-between">
+        <div className="rounded-3xl bg-white/95 backdrop-blur-md px-6 py-6 flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-emerald-400 blur-md opacity-70 animate-pulse"></div>
@@ -170,11 +170,11 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-sky-700 to-emerald-700 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-700 to-emerald-700 bg-clip-text text-transparent">
                 AI Sustainability Dashboard
               </h1>
               <p className="text-gray-500 text-sm mt-1">
-                Intelligent insights to reduce spoilage & optimize cooling energy
+                Smart insights to minimize spoilage & optimize solar cooling.
               </p>
             </div>
           </div>
@@ -183,11 +183,11 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="flex items-center gap-3 mt-4 md:mt-0"
+            className="flex items-center gap-2 mt-4 md:mt-0"
           >
-            <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 rounded-full border border-sky-200">
+            <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-sky-100 to-emerald-100 rounded-full border border-sky-200">
               <LineChart className="w-4 h-4 text-emerald-600" />
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-xs font-medium text-gray-700">
                 Real-time Monitoring Active
               </span>
             </div>
@@ -195,19 +195,19 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
         </div>
       </motion.div>
 
-      {/* 🌟 Single Unified White Grid */}
-      <div className="bg-white rounded-3xl shadow-lg p-6 space-y-6">
+      {/* --- Main Grid Section --- */}
+      <div className="bg-white rounded-3xl shadow-lg p-8 space-y-8 border border-gray-100">
         {modelStarted ? (
           animatedStorage.map((zone, idx) => (
             <motion.div
               key={zone.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className="rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col md:flex-row gap-6"
+              className="rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col md:flex-row gap-8 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white via-sky-50/40 to-emerald-50/40"
             >
               {/* Zone Image */}
-              <div className="w-full md:w-64 h-48 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
+              <div className="w-full md:w-72 h-52 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
                 <img
                   src={zone.image}
                   alt={zone.product}
@@ -215,16 +215,21 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
                 />
               </div>
 
-              {/* Zone Info + Stats */}
+              {/* Zone Info */}
               <div className="flex-1 flex flex-col justify-between gap-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="text-2xl font-semibold text-sky-700">{zone.name}</h2>
-                    <span className="text-sm text-green-700 font-medium">{zone.status}</span>
+                    <h2 className="text-xl font-semibold text-sky-700">
+                      {zone.name}
+                    </h2>
+                    <span className="text-sm text-green-700 font-medium">
+                      {zone.status}
+                    </span>
                     <p className="text-gray-600 mt-1">{zone.product}</p>
                   </div>
                 </div>
 
+                {/* Stats Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     {
@@ -252,22 +257,28 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
                       key={stat.label}
                       className="flex flex-col items-center justify-center p-3 rounded-2xl bg-gray-50 border border-gray-100"
                     >
-                      <div className="flex items-center gap-1 mb-1">{stat.icon}</div>
-                      <p className="text-sm font-medium text-gray-700">{stat.label}</p>
-                      <p className="text-lg font-semibold text-gray-800">{stat.value}</p>
+                      <div className="flex items-center gap-1 mb-1">
+                        {stat.icon}
+                      </div>
+                      <p className="text-sm font-medium text-gray-700">
+                        {stat.label}
+                      </p>
+                      <p className="text-lg font-semibold text-gray-800">
+                        {stat.value}
+                      </p>
                     </div>
                   ))}
                 </div>
 
                 {/* AI Feature Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
                   {aiFeatures(zone).map((f) => (
                     <motion.div
                       key={f.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
-                      className={`flex flex-col p-4 rounded-2xl border ${f.color} border-opacity-30 bg-gray-50`}
+                      className={`flex flex-col p-5 rounded-2xl border ${f.color} border-opacity-40 bg-white/70 backdrop-blur-sm`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -288,10 +299,10 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
                           {f.risk.toLowerCase()}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-600 mb-1">{f.desc}</p>
+                      <p className="text-xs text-gray-600 mb-2">{f.desc}</p>
                       <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
-                          className="h-2 rounded-full bg-sky-400"
+                          className="h-2 rounded-full bg-sky-400 transition-all duration-700"
                           style={{ width: `${f.confidence}%` }}
                         />
                       </div>
@@ -305,9 +316,9 @@ export default function AIInsightsWithStorageVertical({ modelStarted = true }) {
             </motion.div>
           ))
         ) : (
-          <div className="flex items-center justify-center h-48 rounded-2xl border border-dashed border-gray-300">
+          <div className="flex items-center justify-center h-52 rounded-2xl border border-dashed border-gray-300">
             <p className="text-sm text-gray-500">
-              Storage data will appear once the AI system starts
+              Storage data will appear once the AI model is started.
             </p>
           </div>
         )}
