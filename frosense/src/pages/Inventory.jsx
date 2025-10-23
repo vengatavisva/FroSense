@@ -202,12 +202,6 @@ export default function Inventory() {
       <p className="text-slate-500 mb-3 text-sm tracking-wide">
         System not active
       </p>
-      <button
-        onClick={toggleAll}
-        className="px-6 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-full font-semibold shadow-md"
-      >
-        ▶️ Start Model
-      </button>
     </div>
   ) : (
     <>
@@ -328,79 +322,82 @@ export default function Inventory() {
         </div>
 
         {/* ===== Storage Compartments ===== */}
-        <div className="mt-12">
-          <h2 className="text-xl font-semibold text-sky-700 mb-6 flex items-center gap-2">
-            <Boxes className="text-sky-600 w-6 h-6" /> Storage Compartments
-          </h2>
+<div className="mt-12">
+  <h2 className="text-xl font-semibold text-sky-700 mb-6 flex items-center gap-2">
+    <Boxes className="text-sky-600 w-6 h-6" /> Storage Compartments
+  </h2>
 
-          {!modelStarted ? (
-            <div className="flex flex-col items-center justify-center h-40 bg-white/50 rounded-2xl border border-sky-100/60 shadow-md text-slate-500">
-              <p className="text-sm">
-                Storage data will appear once the system starts
-              </p>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {animatedStorage.map((zone, index) => {
+      const temp = modelStarted ? zone.temperature : 0;
+      const shelfDays = modelStarted ? Math.round(zone.shelfLifeDays) : 0;
+      const humidity = modelStarted ? zone.humidity : 0;
+      const risk = getRiskLevel(temp);
+      const shelf = getShelfLifeStatus(shelfDays);
+
+      return (
+        <div
+          key={index}
+          className="bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-lg hover:shadow-sky-200/50 transition-all text-gray-800"
+        >
+          <div className="flex justify-between items-start mb-3">
+            <h3 className="text-sky-600 font-semibold text-lg">{zone.name}</h3>
+            <span
+              className={`px-3 py-1 text-xs rounded-full font-medium ${modelStarted ? risk.color : "bg-gray-100 text-gray-400"}`}
+            >
+              {modelStarted ? risk.label : "Nil"}
+            </span>
+          </div>
+          <p className="text-sm font-medium text-gray-700">
+            {modelStarted ? zone.product : "Nil"}
+          </p>
+          <p className="text-gray-500 text-sm mb-4">
+            {modelStarted ? `${zone.items} item(s)` : "0 item(s)"}
+          </p>
+
+          <div className="flex justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Thermometer className="w-4 h-4 text-rose-500" />
+              <div>
+                <p className="text-xs text-gray-500">Temperature</p>
+                <p className="font-semibold">{temp.toFixed(1)}°C</p>
+              </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {animatedStorage.map((zone, index) => {
-                const temp = zone.temperature;
-                const shelfDays = Math.round(zone.shelfLifeDays);
-                const risk = getRiskLevel(temp);
-                const shelf = getShelfLifeStatus(shelfDays);
-
-                return (
-                  <div
-                    key={index}
-                    className="bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-lg hover:shadow-sky-200/50 transition-all text-gray-800"
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-sky-600 font-semibold text-lg">{zone.name}</h3>
-                      <span className={`px-3 py-1 text-xs rounded-full font-medium transition-colors duration-300 ${risk.color}`}>
-                        {risk.label}
-                      </span>
-                    </div>
-                    <p className="text-sm font-medium text-gray-700">{zone.product}</p>
-                    <p className="text-gray-500 text-sm mb-4">{zone.items} item(s) stored</p>
-
-                    <div className="flex justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <Thermometer className="w-4 h-4 text-rose-500" />
-                        <div>
-                          <p className="text-xs text-gray-500">Temperature</p>
-                          <p className="font-semibold">{temp.toFixed(1)}°C</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Droplets className="w-4 h-4 text-sky-500" />
-                        <div>
-                          <p className="text-xs text-gray-500">Humidity</p>
-                          <p className="font-semibold">{zone.humidity.toFixed(0)}%</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-3">
-                      <Clock className="w-4 h-4 text-amber-500" />
-                      <span className={`text-sm font-medium transition-colors duration-300 ${shelf.color}`}>
-                        Shelf life: {shelf.label}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center border-t border-gray-200 pt-3 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Power className="w-4 h-4 text-green-600" />
-                        <span>{zone.status}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Package className="w-4 h-4 text-sky-500" />
-                        <span>{zone.duty}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="flex items-center gap-2">
+              <Droplets className="w-4 h-4 text-sky-500" />
+              <div>
+                <p className="text-xs text-gray-500">Humidity</p>
+                <p className="font-semibold">{humidity.toFixed(0)}%</p>
+              </div>
             </div>
-          )}
+          </div>
+
+          <div className="flex items-center gap-2 mb-3">
+            <Clock className="w-4 h-4 text-amber-500" />
+            <span
+              className={`text-sm font-medium ${
+                modelStarted ? shelf.color : "text-gray-400"
+              }`}
+            >
+              Shelf life: {modelStarted ? shelf.label : "Nil"}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center border-t border-gray-200 pt-3 text-sm">
+            <div className="flex items-center gap-2">
+              <Power className="w-4 h-4 text-green-600" />
+              <span>{modelStarted ? zone.status : "OFF"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-sky-500" />
+              <span>{modelStarted ? zone.duty : "0%"}</span>
+            </div>
+          </div>
         </div>
+      );
+    })}
+  </div>
+</div>
 
         {/* ===== Environment Trends Section ===== */}
         <div className="mt-16 bg-white/70 backdrop-blur-xl border border-sky-100 rounded-3xl shadow-md hover:shadow-sky-200/50 transition-all">
