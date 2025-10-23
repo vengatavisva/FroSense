@@ -1,21 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useModel } from "../context/ModelContext";
 import EnvironmentTrends from "../components/EnvironmentTrends";
-import {
-  Video,
-  Fan,
-  Power,
-  Gauge,
-  Battery,
-  AlertTriangle,
-  Thermometer,
-  Droplets,
-  Package,
-  Clock,
-  Boxes,
-  Leaf,
-} from "lucide-react";
+import { Video, Fan, Power, Gauge, Battery, AlertTriangle, Thermometer, Droplets, Package, Clock, Boxes, Leaf } from "lucide-react";
 
-// ===== FanCard Component =====
+// ===== FanCard =====
 function FanCard({ fan }) {
   const [rpm, setRpm] = useState(fan.rpm);
 
@@ -23,12 +11,10 @@ function FanCard({ fan }) {
     let interval;
     if (fan.on) {
       interval = setInterval(() => {
-        const randomRpm = (1500 + Math.random() * 100).toFixed(0);
-        setRpm(randomRpm);
+        setRpm((1500 + Math.random() * 100).toFixed(0));
       }, 2000);
-    } else {
-      setRpm(0);
-    }
+    } else setRpm(0);
+
     return () => clearInterval(interval);
   }, [fan.on]);
 
@@ -40,20 +26,9 @@ function FanCard({ fan }) {
 
       <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-white to-white flex items-center justify-center">
         {fan.on ? (
-          <video
-            src="IMG_9634.MP4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <video src="IMG_9634.MP4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
         ) : (
-          <img
-            src="7_-min.png"
-            alt="Fan Stopped"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <img src="7_-min.png" alt="Fan Stopped" className="absolute inset-0 w-full h-full object-cover" />
         )}
       </div>
 
@@ -61,15 +36,13 @@ function FanCard({ fan }) {
         <h3 className="text-sky-700 font-semibold tracking-wide flex items-center justify-center gap-2">
           <Fan size={18} /> {fan.name}
         </h3>
-        <p className="text-sm text-red-500">
-          {fan.on ? `${rpm} RPM` : "Stopped"}
-        </p>
+        <p className="text-sm text-red-500">{fan.on ? `${rpm} RPM` : "Stopped"}</p>
       </div>
     </div>
   );
 }
 
-// ===== Risk & Shelf-Life Utilities =====
+// ===== Risk / Shelf-Life =====
 const getRiskLevel = (temp) => {
   if (temp > 7) return { label: "High Risk", color: "text-rose-600 bg-rose-100" };
   if (temp >= 5) return { label: "Medium Risk", color: "text-amber-600 bg-amber-100" };
@@ -82,94 +55,9 @@ const getShelfLifeStatus = (days) => {
   return { color: "text-green-600", label: `${days} days left` };
 };
 
-// ===== Main Component =====
+// ===== Inventory Component =====
 export default function Inventory() {
-  const [modelStarted, setModelStarted] = useState(false);
-  const [fans, setFans] = useState([
-    { id: 1, name: "FAN 1", on: false, rpm: 0 },
-    { id: 2, name: "FAN 2", on: false, rpm: 0 },
-    { id: 3, name: "FAN 3", on: false, rpm: 0 },
-    { id: 4, name: "FAN 4", on: false, rpm: 0 },
-  ]);
-
-  const [metrics, setMetrics] = useState({
-    temperature: 0,
-    humidity: 0,
-    battery: 0,
-    alerts: 0,
-  });
-
-  const storageZones = [
-    { name: "Zone A", product: "Vaccine Batch A1", items: 2, temperature: 4.2, humidity: 68, shelfLifeDays: 12, status: "Peltier ON", duty: "70%" },
-    { name: "Zone B", product: "Organic Samples", items: 2, temperature: 6.8, humidity: 72, shelfLifeDays: 5, status: "Peltier ON", duty: "85%" },
-    { name: "Zone C", product: "Lab Serum C", items: 1, temperature: 8.5, humidity: 78, shelfLifeDays: 2, status: "Peltier ON", duty: "90%" },
-    { name: "Zone D", product: "Enzyme D3", items: 1, temperature: 3.8, humidity: 65, shelfLifeDays: 15, status: "Peltier ON", duty: "75%" },
-  ];
-
-  const [animatedStorage, setAnimatedStorage] = useState(
-    storageZones.map((zone) => ({ ...zone, temperature: 0, humidity: 0, shelfLifeDays: 0 }))
-  );
-
-  // ===== Toggle Model =====
-  const toggleAll = () => {
-    const next = !modelStarted;
-    setModelStarted(next);
-    setFans((prev) =>
-      prev.map((f) => ({
-        ...f,
-        on: next,
-        rpm: next ? (1500 + Math.random() * 100).toFixed(0) : 0,
-      }))
-    );
-  };
-
-  // ===== Animate Metrics =====
-  useEffect(() => {
-    let interval;
-    const target = { temperature: 5.8, humidity: 71, battery: 68, alerts: 3 };
-    if (modelStarted) {
-      interval = setInterval(() => {
-        setMetrics((prev) => {
-          const next = {};
-          for (let key in prev) {
-            const diff = target[key] - prev[key];
-            next[key] = Math.abs(diff) < 0.1 ? target[key] : prev[key] + diff * 0.1;
-          }
-          return next;
-        });
-      }, 50);
-    } else {
-      setMetrics({ temperature: 0, humidity: 0, battery: 0, alerts: 0 });
-    }
-    return () => clearInterval(interval);
-  }, [modelStarted]);
-
-  // ===== Animate Storage =====
-  useEffect(() => {
-    let interval;
-    if (modelStarted) {
-      interval = setInterval(() => {
-        setAnimatedStorage((prev) =>
-          prev.map((zone, idx) => {
-            const target = storageZones[idx];
-            const nextTemp = Math.abs(target.temperature - zone.temperature) < 0.1
-              ? target.temperature
-              : zone.temperature + (target.temperature - zone.temperature) * 0.1;
-            const nextHumidity = Math.abs(target.humidity - zone.humidity) < 0.1
-              ? target.humidity
-              : zone.humidity + (target.humidity - zone.humidity) * 0.1;
-            const nextShelf = Math.abs(target.shelfLifeDays - zone.shelfLifeDays) < 0.1
-              ? target.shelfLifeDays
-              : zone.shelfLifeDays + (target.shelfLifeDays - zone.shelfLifeDays) * 0.1;
-            return { ...zone, temperature: nextTemp, humidity: nextHumidity, shelfLifeDays: nextShelf };
-          })
-        );
-      }, 50);
-    } else {
-      setAnimatedStorage(storageZones.map((zone) => ({ ...zone, temperature: 0, humidity: 0, shelfLifeDays: 0 })));
-    }
-    return () => clearInterval(interval);
-  }, [modelStarted]);
+  const { modelStarted, toggleModel, fans, metrics, animatedStorage } = useModel();
 
   return (
     <div className="min-h-screen bg-blue-50 text-slate-800 mt-14">
@@ -181,7 +69,7 @@ export default function Inventory() {
               <Video className="text-sky-500" /> Live Video Preview
             </h2>
             <button
-              onClick={toggleAll}
+              onClick={toggleModel}
               className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold shadow-md transition-all text-white ${
                 modelStarted
                   ? "bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700"
@@ -194,45 +82,39 @@ export default function Inventory() {
           </div>
 
           <div className="relative w-full h-[22rem] sm:h-[26rem] lg:h-[28rem] overflow-hidden rounded-b-3xl">
-  {!modelStarted ? (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-sky-50 via-white to-sky-100 border-t border-sky-100/50">
-      <div className="w-20 h-20 mb-3 rounded-full border-4 border-sky-300 flex items-center justify-center animate-pulse shadow-inner">
-        <Video className="text-sky-400 w-10 h-10" />
-      </div>
-      <p className="text-slate-500 mb-3 text-sm tracking-wide">
-        System not active
-      </p>
-    </div>
-  ) : (
-    <>
-      {/* ESP32-CAM Live Stream */}
-      <img
-        src="http://10.203.235.141:81/stream"
-        alt="ESP32-CAM Live Stream"
-        className="absolute inset-0 w-full h-full object-cover"
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = "/fallback-image.png";
-        }}
-      />
-
-      {/* Overlay Gradients & Indicators */}
-      <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
-      <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
-      <div className="absolute bottom-4 right-4 text-sm bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-sky-700 font-medium flex items-center gap-2">
-        <span className="animate-pulse text-red-500 text-base">●</span>
-        Live Feed Active
-      </div>
-      <div className="absolute bottom-4 left-4 text-xs text-white/80 bg-sky-900/40 px-2 py-1 rounded-md font-mono backdrop-blur-sm">
-        {new Date().toLocaleTimeString()}
-      </div>
-    </>
-  )}
-</div>
-
+            {!modelStarted ? (
+              <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-sky-50 via-white to-sky-100 border-t border-sky-100/50">
+                <div className="w-20 h-20 mb-3 rounded-full border-4 border-sky-300 flex items-center justify-center animate-pulse shadow-inner">
+                  <Video className="text-sky-400 w-10 h-10" />
+                </div>
+                <p className="text-slate-500 mb-3 text-sm tracking-wide">System not active</p>
+              </div>
+            ) : (
+              <>
+                <img
+                  src="http://10.203.235.141:81/stream"
+                  alt="ESP32-CAM Live Stream"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/fallback-image.png";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-sky-900/20 via-transparent to-transparent"></div>
+                <div className="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full shadow-[0_0_15px_3px_rgba(239,68,68,0.6)] animate-pulse"></div>
+                <div className="absolute bottom-4 right-4 text-sm bg-white/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-sky-700 font-medium flex items-center gap-2">
+                  <span className="animate-pulse text-red-500 text-base">●</span>
+                  Live Feed Active
+                </div>
+                <div className="absolute bottom-4 left-4 text-xs text-white/80 bg-sky-900/40 px-2 py-1 rounded-md font-mono backdrop-blur-sm">
+                  {new Date().toLocaleTimeString()}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* ===== Fan Control Grid ===== */}
+        {/* ===== Fan Grid ===== */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-sky-700 mb-4 flex items-center gap-2">
             <Fan /> Fan Monitoring Grid
@@ -243,6 +125,7 @@ export default function Inventory() {
             ))}
           </div>
         </div>
+
 
         {/* ===== Environment Data Section ===== */}
         <div className="mt-10">
@@ -399,7 +282,7 @@ export default function Inventory() {
           </div>
         </div>
 
-        {/* ===== Environment Trends Section ===== */}
+        {/* ===== Environment Trends ===== */}
         <div className="mt-16 bg-white/70 backdrop-blur-xl border border-sky-100 rounded-3xl shadow-md hover:shadow-sky-200/50 transition-all">
           <div className="px-6 py-5 border-b border-sky-100 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-sky-700 flex items-center gap-2">
@@ -409,7 +292,7 @@ export default function Inventory() {
             <p className="text-sm text-gray-500">Historical temperature and humidity data</p>
           </div>
           <div className="px-6 py-5">
-            <EnvironmentTrends modelStarted={modelStarted} />
+            <EnvironmentTrends/>
           </div>
         </div>
       </main>
