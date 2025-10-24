@@ -25,10 +25,10 @@ export const ModelProvider = ({ children }) => {
 
   // Storage Zones
   const storageZones = [
-    { name: "Zone A", product: "Vaccine Batch A1", items: 2, temperature: 4.2, humidity: 68, shelfLifeDays: 12, status: "Peltier ON", duty: "70%" },
-    { name: "Zone B", product: "Organic Samples", items: 2, temperature: 6.8, humidity: 72, shelfLifeDays: 5, status: "Peltier ON", duty: "85%" },
-    { name: "Zone C", product: "Lab Serum C", items: 1, temperature: 8.5, humidity: 78, shelfLifeDays: 2, status: "Peltier ON", duty: "90%" },
-    { name: "Zone D", product: "Enzyme D3", items: 1, temperature: 3.8, humidity: 65, shelfLifeDays: 15, status: "Peltier ON", duty: "75%" },
+    { name: "Zone A", product: "Apple", items: 1, temperature: 4.2, humidity: 68, shelfLifeDays: 12, status: "Peltier ON", duty: "70%" },
+    { name: "Zone B", product: "Tomato", items: 1, temperature: 6.8, humidity: 72, shelfLifeDays: 5, status: "Peltier ON", duty: "85%" },
+    { name: "Zone C", product: "Potato", items: 1, temperature: 8.5, humidity: 78, shelfLifeDays: 2, status: "Peltier ON", duty: "90%" },
+    { name: "Zone D", product: "Banana", items: 1, temperature: 3.8, humidity: 65, shelfLifeDays: 15, status: "Peltier ON", duty: "75%" },
   ];
 
   const [animatedStorage, setAnimatedStorage] = useState(

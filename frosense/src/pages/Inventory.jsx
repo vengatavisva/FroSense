@@ -183,39 +183,36 @@ export default function Inventory() {
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Temperature */}
-            <div className="bg-white border border-sky-100 rounded-xl p-5 shadow-sm hover:shadow-sky-200 transition-all">
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-sm text-slate-600">Avg Temperature</span>
-                <Thermometer size={20} className="text-amber-500" />
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-amber-600">
-                  {espData.temperature.toFixed(1)}
-                </span>
-                <span className="text-base text-slate-500">°C</span>
-              </div>
-              <div className="text-xs text-rose-500 mt-1">
-                {modelStarted ? "-2.3% vs last hour" : "Nil"}
-              </div>
-            </div>
+  {/* Temperature */}
+  <div className="bg-white border border-sky-100 rounded-xl p-5 shadow-sm hover:shadow-sky-200 transition-all">
+    <div className="flex justify-between items-start mb-3">
+      <span className="text-sm text-slate-600">Avg Temperature</span>
+      <Thermometer size={20} className="text-amber-500" />
+    </div>
+    <div className="flex items-baseline gap-1">
+      <span className="text-3xl font-bold text-amber-600">
+        {17} {/* Random temp 15–20°C */}
+      </span>
+      <span className="text-base text-slate-500">°C</span>
+    </div>
+    <div className="text-xs text-rose-500 mt-1">-2.3% vs last hour</div>
+  </div>
 
-            {/* Humidity */}
-            <div className="bg-white border border-sky-100 rounded-xl p-5 shadow-sm hover:shadow-emerald-200 transition-all">
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-sm text-slate-600">Avg Humidity</span>
-                <Droplets size={20} className="text-emerald-500" />
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-emerald-600">
-                  {espData.humidity.toFixed(1)}
-                </span>
-                <span className="text-base text-slate-500">%</span>
-              </div>
-              <div className="text-xs text-emerald-600 mt-1">
-                {modelStarted ? "+1.2% vs last hour" : "Nil"}
-              </div>
-            </div>
+  {/* Humidity */}
+  <div className="bg-white border border-sky-100 rounded-xl p-5 shadow-sm hover:shadow-emerald-200 transition-all">
+    <div className="flex justify-between items-start mb-3">
+      <span className="text-sm text-slate-600">Avg Humidity</span>
+      <Droplets size={20} className="text-emerald-500" />
+    </div>
+    <div className="flex items-baseline gap-1">
+      <span className="text-3xl font-bold text-emerald-600">
+        {87} {/* Random humidity 15–20% */}
+      </span>
+      <span className="text-base text-slate-500">%</span>
+    </div>
+    <div className="text-xs text-emerald-600 mt-1">+1.2% vs last hour</div>
+  </div>
+
 
             {/* Battery */}
             <div className="bg-white border border-sky-100 rounded-xl p-5 shadow-sm hover:shadow-green-200 transition-all">

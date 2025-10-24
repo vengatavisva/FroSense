@@ -56,13 +56,13 @@ const zones = [
     name: "Zone D",
     product: "Banana",
     items: 1,
-    temperature: -1.2,
+    temperature: 7,
     humidity: 45,
     shelfLifeDays: 30,
     status: "Active",
     duty: "Charging",
     image:
-      "https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3",
+      "banana.jpeg",
   },
 ];
 
