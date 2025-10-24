@@ -2,6 +2,7 @@ import React from "react";
 import windFarm from "../assets/img1.jpeg";
 import Counter from "../components/counter";
 import {Sparkles, ArrowDownLeft, Zap, Lightbulb, TrendingDown, Battery, Users, Sun } from "lucide-react";
+import EnergyFlowDiagram from "../components/EnergyFlowDiagram";
 
 export default function Home() {
   return (
@@ -242,6 +243,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <div className="bg-blue-50 min-h-screen py-14 px-6 flex flex-col items-center">
+            {/* --- Energy Flow Diagram --- */}
+            <div className="w-full max-w-8xl">
+              <EnergyFlowDiagram />
+            </div>
+            </div>
     </div>
   );
 }

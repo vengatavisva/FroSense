@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   AreaChart,
   Area,
@@ -10,31 +10,62 @@ import {
 
 export default function EnvironmentTrends() {
   const [tab, setTab] = useState("temperature");
+  const [sensorData, setSensorData] = useState({ temperature: 0, humidity: 0 });
+  const [tempHistory, setTempHistory] = useState([]);
+  const [humidityHistory, setHumidityHistory] = useState([]);
 
-  const tempData = [
-    { time: "12:00", value: 4.2 },
-    { time: "13:00", value: 3.8 },
-    { time: "14:00", value: 3.9 },
-    { time: "15:00", value: 4.5 },
-    { time: "16:00", value: 4.3 },
-    { time: "17:00", value: 4.0 },
-  ];
+  useEffect(() => {
+    const fetchSensorData = async () => {
+      try {
+        const res = await fetch("http://10.184.54.40/sensors");
+        if (!res.ok) throw new Error("Failed to fetch sensor data");
+        const data = await res.json();
 
-  const humidityData = [
-    { time: "12:00", value: 72 },
-    { time: "13:00", value: 75 },
-    { time: "14:00", value: 77 },
-    { time: "15:00", value: 80 },
-    { time: "16:00", value: 78 },
-    { time: "17:00", value: 76 },
-  ];
+        const temperature = data.temperature;
+        const humidity = data.humidity;
 
-  const chartData = tab === "temperature" ? tempData : humidityData;
+        const time = new Date().toLocaleTimeString("en-US", {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+
+        setSensorData({ temperature, humidity });
+
+        setTempHistory((prev) => [
+          ...prev.slice(-14),
+          { time, value: temperature },
+        ]);
+        setHumidityHistory((prev) => [
+          ...prev.slice(-14),
+          { time, value: humidity },
+        ]);
+      } catch (err) {
+        console.error("Error fetching ESP data:", err);
+      }
+    };
+
+    fetchSensorData();
+    const interval = setInterval(fetchSensorData, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const chartData = tab === "temperature" ? tempHistory : humidityHistory;
   const color = tab === "temperature" ? "#38bdf8" : "#f59e0b";
+
+  // 👇 Dynamically calculate domain with ±1 value buffer
+  const [minVal, maxVal] = useMemo(() => {
+    if (chartData.length === 0) return [0, 10];
+    const values = chartData.map((d) => d.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return [min - 1, max + 1];
+  }, [chartData]);
 
   return (
     <div>
-      {/* Toggle Tabs */}
+      {/* --- Tabs --- */}
       <div className="flex mb-4 rounded-full border border-sky-200 overflow-hidden w-fit mx-auto">
         <button
           onClick={() => setTab("temperature")}
@@ -44,7 +75,7 @@ export default function EnvironmentTrends() {
               : "text-gray-500 hover:text-sky-600"
           }`}
         >
-          Temperature
+          Temperature ({sensorData.temperature.toFixed(1)}°C)
         </button>
         <button
           onClick={() => setTab("humidity")}
@@ -54,11 +85,11 @@ export default function EnvironmentTrends() {
               : "text-gray-500 hover:text-amber-600"
           }`}
         >
-          Humidity
+          Humidity ({sensorData.humidity.toFixed(1)}%)
         </button>
       </div>
 
-      {/* Chart */}
+      {/* --- Live Chart --- */}
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData}>
           <defs>
@@ -68,9 +99,11 @@ export default function EnvironmentTrends() {
             </linearGradient>
           </defs>
 
-          <XAxis dataKey="time" stroke="#94a3b8" />
+          <XAxis dataKey="time" stroke="#94a3b8" tick={{ fontSize: 12 }} />
           <YAxis
             stroke="#94a3b8"
+            domain={[minVal, maxVal]} // ✅ Add buffered dynamic range
+            tickCount={6}
             tickFormatter={(v) =>
               tab === "temperature" ? `${v}°C` : `${v}%`
             }

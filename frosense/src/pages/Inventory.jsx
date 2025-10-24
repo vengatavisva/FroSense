@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useModel } from "../context/ModelContext";
 import EnvironmentTrends from "../components/EnvironmentTrends";
-import { Video, Fan, Power, Gauge, Battery, AlertTriangle, Thermometer, Droplets, Package, Clock, Boxes, Leaf } from "lucide-react";
+import {
+  Video, Fan, Power, Gauge, Battery, AlertTriangle,
+  Thermometer, Droplets, Package, Clock, Boxes, Leaf
+} from "lucide-react";
 
 // ===== FanCard =====
 function FanCard({ fan }) {
@@ -58,6 +61,51 @@ const getShelfLifeStatus = (days) => {
 // ===== Inventory Component =====
 export default function Inventory() {
   const { modelStarted, toggleModel, fans, metrics, animatedStorage } = useModel();
+
+  // 🔹 Store live ESP8266 readings
+  const [espData, setEspData] = useState({ temperature: 0, humidity: 0 });
+
+  useEffect(() => {
+    let interval;
+
+    // Only fetch when model is ON
+    if (modelStarted) {
+      const fetchESPData = async () => {
+        try {
+          const res = await fetch("http://10.184.54.40/sensors");
+          const data = await res.json();
+
+          // Filter only avgTemperature and avgHumidity
+          const avgTemp =
+            data.avgTemperature ??
+            data.AvgTemperature ??
+            data.temperature ??
+            0;
+          const avgHum =
+            data.avgHumidity ??
+            data.AvgHumidity ??
+            data.humidity ??
+            0;
+
+          setEspData({
+            temperature: avgTemp,
+            humidity: avgHum,
+          });
+        } catch (err) {
+          console.error("ESP8266 fetch error:", err);
+          setEspData({ temperature: 0, humidity: 0 });
+        }
+      };
+
+      fetchESPData();
+      interval = setInterval(fetchESPData, 5000); // refresh every 5s
+    } else {
+      // Reset values to zero when model stops
+      setEspData({ temperature: 0, humidity: 0 });
+    }
+
+    return () => clearInterval(interval);
+  }, [modelStarted]);
 
   return (
     <div className="min-h-screen bg-blue-50 text-slate-800 mt-14">
@@ -143,12 +191,12 @@ export default function Inventory() {
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-amber-600">
-                  {metrics.temperature.toFixed(1)}
+                  {espData.temperature.toFixed(1)}
                 </span>
                 <span className="text-base text-slate-500">°C</span>
               </div>
               <div className="text-xs text-rose-500 mt-1">
-                {modelStarted ? "-2.3% vs last hour" : "-"}
+                {modelStarted ? "-2.3% vs last hour" : "Nil"}
               </div>
             </div>
 
@@ -160,12 +208,12 @@ export default function Inventory() {
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-emerald-600">
-                  {metrics.humidity.toFixed(0)}
+                  {espData.humidity.toFixed(1)}
                 </span>
                 <span className="text-base text-slate-500">%</span>
               </div>
               <div className="text-xs text-emerald-600 mt-1">
-                {modelStarted ? "+1.2% vs last hour" : "-"}
+                {modelStarted ? "+1.2% vs last hour" : "Nil"}
               </div>
             </div>
 
@@ -177,12 +225,12 @@ export default function Inventory() {
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-green-600">
-                  {metrics.battery.toFixed(0)}
+                  {modelStarted ? metrics.battery.toFixed(0) : 0}
                 </span>
                 <span className="text-base text-slate-500">%</span>
               </div>
               <div className="text-xs text-rose-500 mt-1">
-                {modelStarted ? "-5% discharging" : "-"}
+                {modelStarted ? "-5% discharging" : "Nil"}
               </div>
             </div>
 
@@ -194,11 +242,11 @@ export default function Inventory() {
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-rose-600">
-                  {metrics.alerts.toFixed(0)}
+                  {modelStarted ? metrics.alerts.toFixed(0) : 0}
                 </span>
               </div>
               <div className="text-xs text-slate-500 mt-1">
-                {modelStarted ? "in progress" : "-"}
+                {modelStarted ? "in progress" : "Nil"}
               </div>
             </div>
           </div>
