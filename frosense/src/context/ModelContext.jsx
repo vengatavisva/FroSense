@@ -51,7 +51,7 @@ export const ModelProvider = ({ children }) => {
   // ===== Animate Metrics =====
   useEffect(() => {
     let interval;
-    const target = { temperature: 5.8, humidity: 71, battery: 68, alerts: 3 };
+    const target = { temperature: 5.8, humidity: 71, battery: 44, alerts: 3 };
     if (modelStarted) {
       interval = setInterval(() => {
         setMetrics((prev) => {
